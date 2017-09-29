@@ -4,7 +4,7 @@
   <div class="list">
     <ul class="list_stores">
       <% @stores.each do |store| %>
-      <li><a href="/store/<%= store.id %>"><%= store.name %></a></li>
+      <li><a href="/store/<%= store.id %>"><%= store.name() %></a></li>
       <% end %>
     </ul>
   </div>
