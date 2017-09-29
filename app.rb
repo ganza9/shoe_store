@@ -12,18 +12,32 @@ get('/stores')do
   erb(:stores)
 end
 
-post('/store_form')do
-  name = params.fetch('name')
-  store = Store.new({:name => name})
-  store.save()
-  redirect '/'
+get('/brands')do
+  @brands = Brand.all()
+  erb(:brands)
 end
 
 get('/store/:id') do
   @store = Store.find(params[:id])
-  @brand = Brand.find(params[:id])
   erb(:store_detail)
 end
+
+get('/brand/:id') do
+  @brand = Brand.find(params[:id])
+  erb(:brand_detail)
+end
+
+get('/store_form')do
+  erb(:store_form)
+end
+
+post('/store_form')do
+  name = params.fetch('name')
+  @store = Store.create({:name => name})
+  store.save()
+  redirect ('/stores')
+end
+
 
 get('/stores/:id/edit') do
   @store = Store.find(params[:id].to_i)
@@ -46,11 +60,6 @@ delete('/delete/:id') do
   redirect to("/")
 end
 
-get('/brands')do
-  @brands = Brand.all()
-  erb(:brands)
-end
-
 get('/brand_form')do
   erb(:brand_form)
 end
@@ -61,9 +70,4 @@ post('/brand_form')do
   brand = Brand.new({:name => name, :price => price})
   brand.save()
   erb(:brands)
-end
-
-get('/brand/:id') do
-  @brand = Brand.find(params[:id])
-  erb(:brand_detail)
 end
