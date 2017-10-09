@@ -1,19 +1,12 @@
-<h1>Shoe Stores</h1>
-
-<% if @stores.any?() %>
-  <div class="list">
-    <ul class="list_stores">
-      <% @stores.each do |store| %>
-      <li><a href="/store/<%= store.id %>"><%= store.name() %></a></li>
-      <% end %>
-    </ul>
-  </div>
-
-  <% else %>
-    <p class="no_result">There are no stores yet! Please add some!</p>
-  <% end %>
-  <br>
-  <button type="button" name="button" class="button_add"><a href="/store_form">Add Store</a></button>
-</div>
-
-<a href="/">Return Home</a>
+<h1>Stores</h1>
+<hr>
+<% if @stores.any? %>
+  <ul>
+    <% @stores.each() do |store| %>
+      <li><a href="/stores/<%= store.id %>"><%= store.name %></a></li>
+      <br>
+    <% end %>
+  </ul>
+<% else %>
+  <p>There are no stores</p>
+<% end %>

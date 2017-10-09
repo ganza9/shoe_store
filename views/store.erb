@@ -1,0 +1,28 @@
+<h1><%= @store.name %></h1>
+<hr>
+<p>Carries: </p>
+<ul>
+  <% @brands.each do |brand| %>
+  <li><a href="/brands/<%= brand.id %>"><%= brand.name %></a></li>
+  <% if brand.price %>
+    <%= brand.price %>
+  <% end %>
+  <br>
+  <% end %>
+</ul>
+<br>
+<br>
+<form action="/stores/<%= @store.id %>" method="post">
+  <input type="hidden" name="_method" value="delete">
+  <button class="btn red" type="submit" name="button">Delete Store</button>
+</form>
+<p>Edit Store:</p>
+<form action="/stores/<%= @store.id %>" method="post">
+  <input type="text" name="name" id="name">
+  <label for="name">Re-Name Store</label>
+  <input type="text" name="brands" id="brands">
+  <label for="brands">Add Brands</label>
+  <br>
+  <br>
+  <button class="btn blue" type="submit">Edit Store</button>
+</form>

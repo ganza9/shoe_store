@@ -1,20 +1,15 @@
-<h1>Shoe brands</h1>
-
-<% if @brands.any?() %>
-  <div class="list">
-    <ul class="list_brands">
-      <% @brands.each do |brand| %>
-      <li><a href="/brand/<%= brand.id %>"><%= brand.name() %></a></li>
+<h1>Brands</h1>
+<hr>
+<% if @brands.any? %>
+  <ul>
+    <% @brands.each() do |brand| %>
+      <li><a href="/brands/<%= brand.id %>"><%= brand.name %></a></li>
+      <% if brand.price %>
+        $ <%= brand.price %>
       <% end %>
-    </ul>
-  </div>
-
-  <% else %>
-    <p class="no_result">There are no brands yet! Please add some!</p>
-  <% end %>
-  <br>
-  <button type="button" name="button" class="button_add"><a href="/brand_form">Add Brand</a></button>
-  <br>
-  <br>
-  <a href="/">Return to Home</a>
-</div>
+      <br>
+    <% end %>
+  </ul>
+<% else %>
+  <p>There are no brands</p>
+<% end %>

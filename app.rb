@@ -1,73 +1,116 @@
-require("bundler/setup")
-require('pry')
-Bundler.require(:default)
+require 'bundler/setup'
+Bundler.require :default
+require 'pry'
+
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 
-get('/')do
-  erb(:index)
+get '/' do
+  erb :index
 end
 
-get('/stores')do
-  @stores = Store.all()
-  erb(:stores)
+get '/brands' do
+  @brands = Brand.all
+  erb :brands
 end
 
-get('/brands')do
-  @brands = Brand.all()
-  erb(:brands)
+get '/stores' do
+  @stores = Store.all
+  erb :stores
 end
 
-get('/store/:id') do
-  @store = Store.find(params[:id])
-  erb(:store_detail)
+get '/add_brand' do
+  erb :add_brand
 end
 
-get('/brand/:id') do
-  @brand = Brand.find(params[:id])
-  erb(:brand_detail)
-end
-
-get('/store_form')do
-  erb(:store_form)
-end
-
-post('/store_form')do
-  name = params.fetch('name')
-  @store = Store.create({:name => name})
-  store.save()
-  redirect ('/stores')
-end
+post '/add_brand' do
+  name = params.fetch 'name'
+  price = params.fetch 'price'
 
 
-get('/stores/:id/edit') do
-  @store = Store.find(params[:id].to_i)
-  erb(:store_edit)
-end
+  brand = Brand.find_or_initialize_by name: name
+  brand.save
+  brand.update({:price => price})
 
-patch('/stores/:id') do
-  @section = 'stores'
-  @store = Store.find(params[:id].to_i)
-  if @store.update({name: params['name']})
-    redirect '/stores/' + @store.id.to_s
-  else
-    erb(:store_edit)
+  stores = params.fetch('stores').split(', ')
+  stores.each do |store|
+    stor = Store.find_or_initialize_by name: store
+    stor.save
+    brand.stores.push(stor)
   end
+
+  redirect '/brands'
 end
 
-delete('/delete/:id') do
-  store_id = params[:id].to_i
-  Store.where(id: store_id).destroy_all
-  redirect to("/")
+get '/brands/:id' do
+  @brand = Brand.find(params.fetch('id').to_i)
+  @stores = @brand.stores
+  erb :brand
 end
 
-get('/brand_form')do
-  erb(:brand_form)
+get '/stores/:id' do
+  @store = Store.find(params.fetch('id').to_i)
+  @brands = @store.brands
+  erb :store
 end
 
-post('/brand_form')do
-  name = params.fetch('name')
-  price = params.fetch('price')
-  brand = Brand.new({:name => name, :price => price})
-  brand.save()
-  erb(:brands)
+post '/stores/:id' do
+  @store = Store.find(params.fetch('id').to_i)
+
+  name = params.fetch 'name'
+  brands = params.fetch('brands').split(', ')
+
+  @store.update({:name => name})
+  brands.each do |brand|
+    bran = Brand.find_or_initialize_by name: brand
+    bran.save
+    @store.brands.push(bran)
+  end
+  @brands = @store.brands
+  erb :store
+end
+
+post '/brands/:id' do
+  @brand = Brand.find(params.fetch('id').to_i)
+
+  stores = params.fetch('stores').split(', ')
+
+  stores.each do |store|
+    stor = Store.find_or_initialize_by name: store
+    stor.save
+    @brand.stores.push(stor)
+  end
+  @stores = @brand.stores
+  erb :brand
+end
+
+delete '/stores/:id' do
+  store = Store.find(params.fetch('id').to_i)
+  store.destroy
+  redirect '/stores'
+end
+
+delete '/brands/:id' do
+  brand = Brand.find(params.fetch('id').to_i)
+  brand.destroy
+  redirect '/brands'
+end
+
+get '/add_store' do
+  erb :add_store
+end
+
+post '/add_store' do
+  name = params.fetch 'name'
+
+  store = Store.find_or_initialize_by name: name
+  store.save
+
+  brands = params.fetch('brands').split(', ')
+  brands.each do |brand|
+    bran = Brand.find_or_initialize_by name: brand
+    bran.save
+    store.brands.push(bran)
+  end
+
+  redirect '/stores'
 end
