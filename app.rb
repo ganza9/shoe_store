@@ -61,9 +61,9 @@ post '/stores/:id' do
 
   @store.update({:name => name})
   brands.each do |brand|
-    bran = Brand.find_or_initialize_by name: brand
-    bran.save
-    @store.brands.push(bran)
+    brand = Brand.find_or_initialize_by name: brand
+    brand.save
+    @store.brands.push(brand)
   end
   @brands = @store.brands
   erb :store
@@ -75,9 +75,9 @@ post '/brands/:id' do
   stores = params.fetch('stores').split(', ')
 
   stores.each do |store|
-    stor = Store.find_or_initialize_by name: store
-    stor.save
-    @brand.stores.push(stor)
+    store = Store.find_or_initialize_by name: store
+    store.save
+    @brand.stores.push(store)
   end
   @stores = @brand.stores
   erb :brand
@@ -107,8 +107,8 @@ post '/add_store' do
 
   brands = params.fetch('brands').split(', ')
   brands.each do |brand|
-    bran = Brand.find_or_initialize_by name: brand
-    bran.save
+    brand = Brand.find_or_initialize_by name: brand
+    brand.save
     store.brands.push(bran)
   end
 
