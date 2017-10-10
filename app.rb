@@ -109,7 +109,7 @@ post '/add_store' do
   brands.each do |brand|
     brand = Brand.find_or_initialize_by name: brand
     brand.save
-    store.brands.push(bran)
+    store.brands.push(brand)
   end
 
   redirect '/stores'
